@@ -80,7 +80,7 @@ public class User extends Subject implements UserComponent, Observer {
     public void setMessages(String myMessages) {
         messages = myMessages;
         notifyObservers();
-        if (messages.contains("good") || messages.contains("great") || messages.contains("excellent")) {
+        if (messages.contains("good") || messages.contains("excellent") || messages.contains(":)")) {
             positiveCount++;
         }
         messageCount++;
