@@ -21,33 +21,37 @@ public class User extends Subject implements UserComponent, Observer {
     private List<User> followings;
     private String messages;
     private List<String> feed;
+    private long creationTime; // HW 3 #2
+    private long lastUpdateTime; // HW 3 #3
 
-    public User() {
+    public User(){
         userCount++;
         followers = new ArrayList<>();
         followings = new ArrayList<>();
         messages = "";
         feed = new ArrayList<>();
+        this.creationTime = System.currentTimeMillis(); // HW 3 #2 -- new User created
     }
 
-    public User(String newID) {
+    public User(String newID){
         userCount++;
         userID = newID;
         followers = new ArrayList<>();
         followings = new ArrayList<>();
         messages = "";
         feed = new ArrayList<>();
+        this.creationTime = System.currentTimeMillis(); // HW 3 #2 -- new User created
     }
 
-    public int getUserCount() {
+    public int getUserCount(){
         return userCount;
     }
 
-    public int getPositiveCount() {
+    public int getPositiveCount(){
         return positiveCount;
     }
 
-    public int getMessageCount() {
+    public int getMessageCount(){
         return messageCount;
     }
 
@@ -57,49 +61,52 @@ public class User extends Subject implements UserComponent, Observer {
         return userID;
     }
 
-    public List<User> getFollowers() {
+    public List<User> getFollowers(){
         return followers;
     }
 
-    public void setFollowers(User newFollower) {
+    public void setFollowers(User newFollower){
         followers.add(newFollower);
     }
 
-    public List<User> getFollowings() {
+    public List<User> getFollowings(){
         return followings;
     }
 
-    public void setFollowings(User newFollowing) {
+    public void setFollowings(User newFollowing){
         followings.add(newFollowing);
     }
 
-    public String getMessages() {
+    public String getMessages(){
         return messages;
     }
 
-    public void setMessages(String myMessages) {
+    public void setMessages(String myMessages){
+        lastUpdateTime = System.currentTimeMillis(); // HW 3 #3 -- new tweet posted
         messages = myMessages;
         notifyObservers();
-        if (messages.contains("good") || messages.contains("excellent") || messages.contains(":)")) {
+        if(messages.contains("good") || messages.contains("great") || messages.contains("positive") || messages.contains(":)") ){
             positiveCount++;
         }
         messageCount++;
     }
 
-    public List<String> getFeed() {
+    public List<String> getFeed(){
         return feed;
     }
 
-    public void setFeed(String message) {
+    public void setFeed(String message){
+        lastUpdateTime = System.currentTimeMillis(); // HW 3 #3 -- new tweet posted (user and followers)
         feed.add(message);
     }
 
     // OBSERVER PATTERN -- observe feed of followings
-   public void update(Subject subject) {
-        if (subject instanceof User) {
+    public void update(Subject subject) {
+        if(subject instanceof User){
             System.out.println(((User) subject).getID() + "'s New Message: " + ((User) subject).getMessages());
-            for (int i = 0 ; i < ((User) subject).getFollowers().size() ; i++) { // for all followers, update feed
-                ((User) subject).getFollowers().get(i).setFeed(((User) subject).getMessages());
+            for(int i = 0 ; i < ((User) subject).getFollowers().size() ; i++){ // for all followers, update feed
+                ((User) subject).getFollowers().get(i).setFeed(((User) subject).getMessages() + " Updated: " + lastUpdateTime);
+
             }
         }
     }
@@ -108,5 +115,14 @@ public class User extends Subject implements UserComponent, Observer {
     @Override
     public int accept(UserComponentVisitor visitor) {
         return visitor.visit(this);
+    }
+
+    // HW 3
+    public long getCreationTime(){
+        return creationTime;
+    }
+
+    public long getUpdateTime(){
+        return lastUpdateTime;
     }
 }

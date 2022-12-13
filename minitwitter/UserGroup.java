@@ -15,23 +15,26 @@ public class UserGroup implements UserComponent {
     private int userGroupCount = 0;
     private String groupID;
     private List<UserComponent> enteries; //COMPOSITE PATTERN -- list of UserComponent (interface)
+    private long creationTime; // HW 3 #2
 
-    public UserGroup() {
+    public UserGroup(){
         userGroupCount++;
         enteries = new ArrayList<UserComponent>();
+        creationTime = this.creationTime = System.currentTimeMillis(); // HW 3 #2 -- new user group created
     }
 
-    public UserGroup(String newID) {
+    public UserGroup(String newID){
         userGroupCount++;
         enteries = new ArrayList<UserComponent>();
         groupID = newID;
+        creationTime = this.creationTime = System.currentTimeMillis(); // HW 3 #2 -- new user group created
     }
 
-    public int getUserGroupCount() {
-       return userGroupCount;
+    public int getUserGroupCount(){
+        return userGroupCount;
     }
 
-    public void setEnteries(UserComponent newUser) {
+    public void setEnteries(UserComponent newUser){
         enteries.add(newUser);
     }
 
@@ -49,5 +52,10 @@ public class UserGroup implements UserComponent {
     @Override
     public int accept(UserComponentVisitor userGroupVisitor) {
         return userGroupVisitor.visit(this);
+    }
+
+    // HW 3
+    public long getCreationTime(){
+        return creationTime;
     }
 }
